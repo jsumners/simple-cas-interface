@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: cas.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: cas.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const debug = require('debug')('simple-cas-client:main');
+const CasParameters = require(__dirname + '/lib/parameters');
+
+/**
+ * &lt;p>Instances of &lt;tt>CAS&lt;/tt> provide convenient access to protocol URLs like
+ * '/login' and '/logout', as well as ticket verification.&lt;/p>
+ *
+ * @param {CasParameters} parameters An instance of {@link CasParameters}.
+ *  Required.
+ * @constructor
+ * @property {string} serverUrl The base URL for the remote CAS server to which
+ *  all API methods will be appended.
+ * @property {string} serviceUrl The local endpoint that the remote CAS server
+ *  will interact with, e.g. where clients will be redirected after login.
+ * @property {string} protocolVersion The version of the CAS protocol that will
+ *  be used when communicating with the remote CAS server.
+ * @property {string} serviceValidateUri The endpoint that will be used to
+ *  validate service tickets.
+ * @propety {string} loginUrl The full URL, with query parameters, to use when
+ *  sending clients to the remote CAS server for authentication.
+ * @property {string} logoutUrl The full URL, with query parameters, to use
+ *  when sending clients to the remote CAS server for authentication.
+ * @throws {Error} When an invalid {@link CASParameters} has been supplied.
+ */
+function CAS(parameters) {
+  const validation = CasParameters.validate(parameters);
+  if (validation.error !== null) {
+    debug(validation.error.message);
+    throw new Error('Must supply a valid CAS parameters object');
+  }
+
+  Object.defineProperties(this, {
+    serverUrl: {
+      value: CasParameters.normalizeUrl(validation.value.serverUrl)
+    },
+    serviceUrl: {
+      value: CasParameters.normalizeUrl(validation.value.serviceUrl)
+    },
+    protocolVersion: {
+      value: validation.value.protocolVersion + 0
+    }
+  });
+
+  switch (this.protocolVersion) {
+    case 1:
+      Object.defineProperty(this, 'serviceValidateUri', {value: '/validate'});
+      this._validateServiceResponse = require(__dirname + '/lib/protocol1');
+      break;
+    case 2:
+      Object.defineProperty(
+        this,
+        'serviceValidateUri',
+        {value: '/serviceValidate'}
+      );
+      this._validateServiceResponse = require(__dirname + '/lib/protocol2');
+      break;
+    case 3:
+      Object.defineProperty(
+        this,
+        'serviceValidateUri',
+        {value: '/p3/serviceValidate'}
+      );
+      this._validateServiceResponse = require(__dirname + '/lib/protocol3');
+  }
+
+  const queryParameters = {
+    service: encodeURIComponent(this.serviceUrl)
+  };
+
+  if (validation.value.renew &amp;&amp; !validation.value.gateway) {
+    queryParameters.renew = true;
+  } else if (validation.value.gateway) {
+    queryParameters.gateway = true;
+  }
+
+  if (validation.value.method !== 'GET') {
+    queryParameters.method = 'POST';
+  }
+
+  const qs = (function() {
+    let result = '';
+    for (let p of Object.keys(queryParameters)) {
+      result += `&amp;${p}=${queryParameters[p]}`;
+    }
+    return '?' + result.substr(1);
+  }());
+  Object.defineProperty(this, 'loginUrl', {
+    value: this.serverUrl + qs
+  });
+
+  Object.defineProperty(this, 'logoutUrl', {
+    value: this.serverUrl + '?service=' + queryParameters.service
+  });
+}
+
+/**
+ * &lt;p>After receiving a service ticket from the remote CAS server, use this
+ * method to verify its authenticity.&lt;/p>
+ *
+ * @param {string} ticket The service ticket string as returned from the
+ *  remote CAS server.
+ * @returns {Promise} &lt;p>A &lt;tt>Promise&lt;/tt> that resolves if the ticket is a
+ *  valid service ticket. The parameter passed to the resolve function will be
+ *  an object the represents the &lt;tt>authenticationSuccess&lt;/tt> elements of
+ *  the returned XML for protocols 2.0 and 3.0. For protocol 1.0 it will merely
+ *  be &lt;tt>true&lt;/tt>.&lt;/p>
+ *
+ *  &lt;p>If the ticket it is invalid, or some other issue occurred,
+ *  the promise will be rejected with an instance of &lt;tt>Error&lt;/tt> that
+ *  indicates why.&lt;/p>
+ */
+CAS.prototype.validateServiceTicket = function vt(ticket) {
+  const func = require(__dirname + '/lib/validateServiceTicket');
+  return func.call(this, ticket);
+};
+
+module.exports = CAS;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CAS.html">CAS</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Dec 08 2015 10:45:22 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
