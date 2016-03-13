@@ -15,6 +15,19 @@ it('Rejects invalid parameters', function invalidParamsTest(done) {
   done();
 });
 
+it('Recognizes strictSSL parameter', function strictSSLTest(done) {
+  const parameters = {
+    serverUrl: 'http://foo/bar',
+    serviceUrl: 'http://foo/bar',
+    strictSSL: false
+  };
+
+  const cas = new CAS(parameters);
+  expect(cas.strictSSL).to.exist;
+  expect(cas.strictSSL).to.be.false;
+  done();
+});
+
 it('Normalizes URLs', function normalizeUrlsTest(done) {
   const parameters = {
     serverUrl: 'http://example.com/cas/',

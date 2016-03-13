@@ -40,6 +40,9 @@ function CAS(parameters) {
     },
     protocolVersion: {
       value: validation.value.protocolVersion + 0
+    },
+    strictSSL: {
+      value: validation.value.strictSSL
     }
   });
   debug('cas.serverUrl: %s', this.serverUrl);
