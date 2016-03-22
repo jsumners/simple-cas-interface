@@ -162,10 +162,12 @@ it('Rejects authentication failures', function authfail2(done) {
 it('Rejects bad responses', function authboo2(done) {
   const xml = '<dsiafl,';
   proto2(xml)
-    .then(function resolved(){})
+    .then(function resolved(wut){
+      done(wut);
+    })
     .catch(function caught(result) {
       expect(result).to.be.an.instanceof(Error);
-      expect(result.message).to.include('Could not parse');
+      expect(result.message).to.include('Invalid character');
       done();
     });
 });
@@ -204,7 +206,7 @@ it('Rejects bad responses', function authboo2(done) {
     .then(function resolved(){})
     .catch(function caught(result) {
       expect(result).to.be.an.instanceof(Error);
-      expect(result.message).to.include('Could not parse');
+      expect(result.message).to.include('Invalid character');
       done();
     });
 });

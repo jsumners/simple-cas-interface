@@ -30,7 +30,10 @@ test('good response', function validTickets(done) {
         expect(response.user).to.equal('username');
         done();
       })
-      .catch(function caught(){});
+      .catch((err) => {
+        server.close();
+        done(err);
+      });
   });
 });
 
