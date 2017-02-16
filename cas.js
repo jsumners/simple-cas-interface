@@ -1,7 +1,7 @@
 'use strict'
 
-const debug = require('debug')('simple-cas-interface:main')
 const CasParameters = require('./lib/parameters')
+let log = require(require.resolve('./lib/logger'))()
 
 /**
  * <p>Instances of <tt>CAS</tt> provide convenient access to protocol URLs like
@@ -22,12 +22,17 @@ const CasParameters = require('./lib/parameters')
  *  sending clients to the remote CAS server for authentication.
  * @property {string} logoutUrl The full URL, with query parameters, to use
  *  when sending clients to the remote CAS server for authentication.
+ * @property {object} [logger] An instance of a logger that conforms to the
+ *  Log4j interface. We recommend {@link https://npm.im/pino}.
+ *  All logs except errors are logged at the 'trace' level. Errors are logged
+ *  at the 'error' level.
  * @throws {Error} When an invalid {@link CASParameters} has been supplied.
  */
 function CAS (parameters) {
+  if (parameters.logger) log = require(require.resolve('./lib/logger'))(parameters.logger)
   const validation = CasParameters.validate(parameters)
   if (validation.error !== null) {
-    debug(validation.error.message)
+    log.error(validation.error.message)
     throw new Error('Must supply a valid CAS parameters object')
   }
 
@@ -45,9 +50,9 @@ function CAS (parameters) {
       value: validation.value.strictSSL
     }
   })
-  debug('cas.serverUrl: %s', this.serverUrl)
-  debug('cas.serviceUrl: %s', this.serviceUrl)
-  debug('cas.protocolVersion: %s', this.protocolVersion)
+  log.trace('cas.serverUrl: %s', this.serverUrl)
+  log.trace('cas.serviceUrl: %s', this.serviceUrl)
+  log.trace('cas.protocolVersion: %s', this.protocolVersion)
 
   switch (this.protocolVersion) {
     case 1:
@@ -95,12 +100,12 @@ function CAS (parameters) {
   Object.defineProperty(this, 'loginUrl', {
     value: this.serverUrl + '/login' + qs
   })
-  debug('cas.loginUrl: %s', this.loginUrl)
+  log.trace('cas.loginUrl: %s', this.loginUrl)
 
   Object.defineProperty(this, 'logoutUrl', {
     value: this.serverUrl + '/logout' + '?service=' + queryParameters.service
   })
-  debug('cas.logoutUrl: %s', this.logoutUrl)
+  log.trace('cas.logoutUrl: %s', this.logoutUrl)
 }
 
 /**
