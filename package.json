@@ -21,14 +21,14 @@
   },
   "dependencies": {
     "abstract-logging": "^1.0.0",
-    "joi": "^7.3.0",
+    "joi": "^10.2.2",
     "request": "^2.69.0",
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "jsdoc": "^3.4.0",
-    "mocha": "^2.4.0",
+    "jsdoc": "^3.4.3",
+    "mocha": "^3.2.0",
     "standard": "^8.6.0"
   }
 }
