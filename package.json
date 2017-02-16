@@ -4,7 +4,7 @@
   "description": "Provides an interface for authenticating and validating with a JASIG CAS server",
   "main": "cas.js",
   "scripts": {
-    "test": "mocha --ui qunit",
+    "test": "standard cas.js lib/*.js test/*.js && mocha --ui qunit",
     "doc": "jsdoc -R Readme.md -d doc cas.js lib/*.js"
   },
   "keywords": [
@@ -28,6 +28,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "jsdoc": "^3.4.0",
-    "mocha": "^2.4.0"
+    "mocha": "^2.4.0",
+    "standard": "^8.6.0"
   }
 }
