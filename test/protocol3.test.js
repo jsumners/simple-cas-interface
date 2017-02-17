@@ -43,3 +43,17 @@ test('protocol3 resolves authentication successes', (t) => {
     })
     .catch((err) => t.threw(err))
 })
+
+test('protocol3 makes single groups into an array', (t) => {
+  t.plan(5)
+  const xml = common.getFixture('protocol3_success_with_one_group.xml')
+  proto3(xml)
+    .then((result) => {
+      t.is(result.hasOwnProperty('attributes'), true)
+      t.is(result.attributes.hasOwnProperty('memberOf'), true)
+      t.type(result.attributes.memberOf, Array)
+      t.is(result.attributes.memberOf.length, 1)
+      t.is(result.attributes.memberOf[0], 'foo')
+    })
+    .catch((err) => t.threw(err))
+})
