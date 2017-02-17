@@ -85,4 +85,5 @@ object.
 | method | <code>string</code> | <code>&quot;GET&quot;</code> | The method the remote CAS server should use  when redirecting clients back to the provided `serviceUrl`.  Default: `GET` |
 | useGateway | <code>boolean</code> | <code>false</code> | Indicates if login URLs should  include the `gateway` parameter. Default: `false`. |
 | strictSSL | <code>boolean</code> | <code>true</code> | Specifies whether or not the client  should validate remote SSL certificates. Default: `true`. |
+| logger | <code>object</code> |  | An instance of a logger that conforms  to the Log4j interface. We recommend [http://npm.im/pino](http://npm.im/pino). |
 
