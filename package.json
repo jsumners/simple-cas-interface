@@ -1,6 +1,6 @@
 {
   "name": "simple-cas-interface",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Provides an interface for authenticating and validating with a JASIG CAS server",
   "main": "cas.js",
   "scripts": {
