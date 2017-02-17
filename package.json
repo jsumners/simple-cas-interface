@@ -6,7 +6,7 @@
   "scripts": {
     "test": "tap --no-cov 'test/**/*.test.js'",
     "lint": "standard cas.js lib/*.js test/*.js",
-    "doc": "jsdoc -R Readme.md -d doc cas.js lib/*.js"
+    "doc": "jsdoc2md cas.js lib/*.js > api.md"
   },
   "precommit": [
     "lint",
@@ -31,7 +31,7 @@
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
-    "jsdoc": "^3.4.3",
+    "jsdoc-to-markdown": "^3.0.0",
     "pre-commit": "^1.2.2",
     "standard": "^8.6.0",
     "tap": "^10.1.1"

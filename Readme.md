@@ -15,7 +15,7 @@ implementation is the [hapi-cas module][hapi-cas].
 This module follows the [specification][spec] and implements protocol version
 1.0, 2.0, and 3.0.
 
-This module is fully documented in the [doc](doc/index.html) directory.
+This module is fully documented in the [api.md](api.md) document.
 
 **Note:** CAS's proxy granting ticket protocol is not yet supported. Basically
 because this author doesn't quite understand it or its purpose.

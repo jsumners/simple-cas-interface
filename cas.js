@@ -4,28 +4,36 @@ const CasParameters = require('./lib/parameters')
 let log = require(require.resolve('./lib/logger'))()
 
 /**
- * <p>Instances of <tt>CAS</tt> provide convenient access to protocol URLs like
- * '/login' and '/logout', as well as ticket verification.</p>
+ * Instances of `CAS` provide convenient access to protocol URLs like
+ * `/login` and `/logout`, as well as ticket verification.
  *
  * @param {CasParameters} parameters An instance of {@link CasParameters}.
- *  Required.
+ *
  * @constructor
+ *
  * @property {string} serverUrl The base URL for the remote CAS server to which
  *  all API methods will be appended.
+ *
  * @property {string} serviceUrl The local endpoint that the remote CAS server
  *  will interact with, e.g. where clients will be redirected after login.
+ *
  * @property {string} protocolVersion The version of the CAS protocol that will
  *  be used when communicating with the remote CAS server.
+ *
  * @property {string} serviceValidateUri The endpoint that will be used to
  *  validate service tickets.
+ *
  * @propety {string} loginUrl The full URL, with query parameters, to use when
  *  sending clients to the remote CAS server for authentication.
+ *
  * @property {string} logoutUrl The full URL, with query parameters, to use
  *  when sending clients to the remote CAS server for authentication.
+ *
  * @property {object} [logger] An instance of a logger that conforms to the
  *  Log4j interface. We recommend {@link https://npm.im/pino}.
  *  All logs except errors are logged at the 'trace' level. Errors are logged
  *  at the 'error' level.
+ *
  * @throws {Error} When an invalid {@link CASParameters} has been supplied.
  */
 function CAS (parameters) {
@@ -109,20 +117,20 @@ function CAS (parameters) {
 }
 
 /**
- * <p>After receiving a service ticket from the remote CAS server, use this
- * method to verify its authenticity.</p>
+ * After receiving a service ticket from the remote CAS server, use this
+ * method to verify its authenticity.
  *
  * @param {string} ticket The service ticket string as returned from the
  *  remote CAS server.
- * @returns {Promise} <p>A <tt>Promise</tt> that resolves if the ticket is a
- *  valid service ticket. The parameter passed to the resolve function will be
- *  an object the represents the <tt>authenticationSuccess</tt> elements of
- *  the returned XML for protocols 2.0 and 3.0. For protocol 1.0 it will merely
- *  be <tt>true</tt>.</p>
  *
- *  <p>If the ticket it is invalid, or some other issue occurred,
- *  the promise will be rejected with an instance of <tt>Error</tt> that
- *  indicates why.</p>
+ * @returns {Promise}
+ *
+ * @resolve {object} an object the represents the `authenticationSuccess`
+ * elements of the returned XML for protocols 2.0 and 3.0. For protocol 1.0
+ * it will merely be `true`.
+ *
+ * @reject {Error} If the ticket it is invalid, or some other issue occurred,
+ * the promise will be rejected with an instance of `Error` that indicates why.
  */
 CAS.prototype.validateServiceTicket = function vt (ticket) {
   const func = require('./lib/validateServiceTicket')
